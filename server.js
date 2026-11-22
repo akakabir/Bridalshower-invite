@@ -9,14 +9,17 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Enable byte-range requests for smooth video streaming and scrubbing
-app.use(express.static(__dirname, {
+const staticOptions = {
   setHeaders: (res, filePath) => {
     if (filePath.endsWith('.mp4')) {
       res.setHeader('Accept-Ranges', 'bytes');
       res.setHeader('Content-Type', 'video/mp4');
     }
   }
-}));
+};
+
+app.use(express.static(path.join(__dirname, 'public'), staticOptions));
+app.use(express.static(__dirname, staticOptions));
 
 // Fallback to index.html for any route
 app.get('*', (req, res) => {

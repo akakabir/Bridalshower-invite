@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>You're Invited — Bridal Shower</title>
+<meta name="description" content="Interactive luxury bridal shower invitation for Dr. Ayesha Fatima with 3D envelope opening animation and video.">
+<meta property="og:title" content="You're Invited — Bridal Shower">
+<meta property="og:description" content="Interactive luxury bridal shower invitation for Dr. Ayesha Fatima with 3D envelope opening animation and video.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --wine-darkest: #160309;
+    --wine-dark: #260510;
+    --wine-mid: #460b1b;
+    --wine-light: #641227;
+    --wine-bright: #7c1832;
+    --gold-foil: #d4af37;
+    --gold-bright: #f6e6b4;
+    --gold-dark: #99751e;
+    --cream-light: #faf5ee;
+  }
+
+  html, body {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    background: var(--wine-darkest);
+    color: var(--cream-light);
+    font-family: 'Playfair Display', Georgia, serif;
+    overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar { display: none; }
+  body { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Scroll runway provides height for smooth scrubbing */
+  .scroll-runway {
+    height: 480vh;
+  }
+
+  /* Fixed 3D Viewport */
+  .viewport {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(100, 18, 39, 0.45) 0%, rgba(22, 3, 9, 0.95) 70%),
+      var(--wine-darkest);
+    perspective: 1200px;
+    -webkit-perspective: 1200px;
+  }
+
+  /* Ambient floating sparkles */
+  .sparkles-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .sparkle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(246, 230, 180, 0.9) 0%, rgba(212, 175, 55, 0.5) 45%, transparent 75%);
+    animation: sparkFloat linear infinite;
+    pointer-events: none;
+  }
+  @keyframes sparkFloat {
+    0% { transform: translateY(0) scale(0.3); opacity: 0; }
+    20% { opacity: 0.85; transform: translateY(-18vh) scale(1); }
+    80% { opacity: 0.5; }
+    100% { transform: translateY(-95vh) scale(0.2); opacity: 0; }
+  }
+
+  /* Ambient background light beam */
+  .ambient-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 600px;
+    height: 600px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, rgba(124, 24, 50, 0.12) 40%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(40px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Header / Hero */
+  .hero-header {
+    position: absolute;
+    top: 5vh;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 30;
+    pointer-events: none;
+    padding: 0 20px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .hero-pretitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(0.65rem, 2vw, 0.78rem);
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(246, 230, 180, 0.75);
+    margin-bottom: 6px;
+  }
+  .hero-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2.4rem, 8.5vw, 3.8rem);
+    font-weight: 400;
+    color: var(--gold-foil);
+    text-shadow: 0 2px 20px rgba(212, 175, 55, 0.4), 0 0 40px rgba(124, 24, 50, 0.3);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(1rem, 3.2vw, 1.25rem);
+    font-style: italic;
+    color: rgba(250, 245, 238, 0.85);
+    letter-spacing: 0.1em;
+  }
+
+  /* Bottom Scroll / Interaction Hint */
+  .scroll-hint-bar {
+    position: absolute;
+    bottom: 4vh;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 30;
+    pointer-events: auto;
+    transition: opacity 0.25s ease;
+  }
+  .scroll-hint-btn {
+    background: rgba(40, 6, 17, 0.6);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--gold-bright);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 9px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+    transition: all 0.3s ease;
+  }
+  .scroll-hint-btn:hover {
+    background: rgba(80, 12, 33, 0.85);
+    border-color: var(--gold-foil);
+    box-shadow: 0 6px 24px rgba(212, 175, 55, 0.25);
+    transform: translateY(-2px);
+  }
+  .scroll-arrow-anim {
+    width: 14px;
+    height: 14px;
+    border-right: 2px solid var(--gold-foil);
+    border-bottom: 2px solid var(--gold-foil);
+    transform: rotate(45deg);
+    animation: arrowBounce 1.6s ease-in-out infinite;
+  }
+  @keyframes arrowBounce {
+    0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 0.4; }
+    50% { transform: rotate(45deg) translate(4px, 4px); opacity: 1; }
+  }
+
+  /* ═══════════════════════════════════════════
+     STAGE ANCHOR: DIRECT SIBLING 3D LAYERING
+     
+     No wrapper containers that isolate stacking contexts!
+     Direct children of stage-anchor:
+       1. .layer-flap       (z-index: 5 when open, 40 when closed)
+       2. .layer-env-back   (z-index: 10)
+       3. .layer-card       (z-index: 20 inside pocket, 60 once pulled out)
+       4. .layer-env-front  (z-index: 30 - covers lower portion of card)
+       5. .layer-wax-seal   (z-index: 50)
+     ═══════════════════════════════════════════ */
+  .stage-anchor {
+    position: relative;
+    width: min(85vw, 340px);
+    /* 5:7 ratio matching 480x672 portrait invitation */
+    height: calc(min(85vw, 340px) * 1.38);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ═══ LAYER 1: SEPARATED 3D TOP FLAP ═══ */
+  .layer-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 48%;
+    transform-origin: top center;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    z-index: 40;
+    will-change: transform, z-index;
+  }
+  .flap-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%);
+  }
+  /* Outside Face (Burgundy with gold border) */
+  .flap-outside {
+    background: linear-gradient(180deg, #621125 0%, #480b1a 60%, #340713 100%);
+    z-index: 2;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.45));
+  }
+  .flap-outside::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, transparent 40%);
+    pointer-events: none;
+  }
+  .flap-outside-border {
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%);
+    border-top: 1.5px solid rgba(212, 175, 55, 0.65);
+  }
+  /* Inside Face (Champagne Silk Liner visible when flipped 180deg) */
+  .flap-inside {
+    background:
+      radial-gradient(circle at 50% 70%, rgba(255, 255, 255, 0.35) 0%, transparent 60%),
+      linear-gradient(0deg, #dac39c 0%, #f7ecd7 50%, #e3d2b3 100%);
+    transform: rotateX(180deg);
+    z-index: 1;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.5);
+  }
+
+  /* ═══ LAYER 2: ENVELOPE BACK WALL (z-index: 10) ═══ */
+  .layer-env-back {
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    background: linear-gradient(160deg, #360714 0%, #20040c 50%, #150208 100%);
+    box-shadow:
+      0 20px 50px rgba(0, 0, 0, 0.75),
+      0 4px 15px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(212, 175, 55, 0.25);
+    z-index: 10;
+    overflow: hidden;
+  }
+  .env-liner {
+    position: absolute;
+    inset: 8px;
+    border-radius: 5px;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 60%),
+      linear-gradient(135deg, #e3d2b3 0%, #f7ecd7 45%, #dac39c 85%, #bfa170 100%);
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    opacity: 0.95;
+  }
+  .env-liner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(160, 110, 40, 0.15) 1px, transparent 1px),
+      radial-gradient(circle, rgba(160, 110, 40, 0.15) 1px, transparent 1px);
+    background-size: 16px 16px;
+    background-position: 0 0, 8px 8px;
+    opacity: 0.4;
+  }
+
+  /* ═══ LAYER 3: INVITATION CARD (VIDEO) ═══
+     - Inside pocket initially (z-index: 20)
+     - Sits in FRONT of envelope back (10) and open flap (5)
+     - Sits BEHIND front pocket (30) so lower portion is tucked inside!
+     - Promoted to z-index: 60 once cleared from pocket
+  */
+  .layer-card {
+    position: absolute;
+    top: 5%;
+    left: 4.5%;
+    right: 4.5%;
+    bottom: 5%;
+    z-index: 20;
+    will-change: transform, z-index;
+    transform-origin: center center;
+    border-radius: 8px;
+    box-shadow:
+      0 12px 30px rgba(0, 0, 0, 0.65),
+      0 0 0 1px rgba(212, 175, 55, 0.45);
+    overflow: hidden;
+    background: #180309;
+    cursor: pointer;
+  }
+  .card-video-element {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    background: #180309;
+  }
+  .card-border-sheen {
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    border: 1px solid rgba(246, 230, 180, 0.35);
+    box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.2);
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* ═══ LAYER 4: ENVELOPE FRONT POCKET (z-index: 30) ═══
+     - Completely separate layer!
+     - Sits physically in FRONT of the card!
+     - The video NEVER hides the envelope!
+  */
+  .layer-env-front {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    pointer-events: none;
+  }
+  /* Left Fold */
+  .fold-left {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, #440918 0%, #300611 65%, #22030a 100%);
+    clip-path: polygon(0 0, 0 100%, 53% 58%);
+    -webkit-clip-path: polygon(0 0, 0 100%, 53% 58%);
+    filter: drop-shadow(2px 0 6px rgba(0, 0, 0, 0.35));
+  }
+  /* Right Fold */
+  .fold-right {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(240deg, #440918 0%, #300611 65%, #22030a 100%);
+    clip-path: polygon(100% 0, 100% 100%, 47% 58%);
+    -webkit-clip-path: polygon(100% 0, 100% 100%, 47% 58%);
+    filter: drop-shadow(-2px 0 6px rgba(0, 0, 0, 0.35));
+  }
+  /* Bottom Triangular Fold with distinct Gold Foil Piping Rim */
+  .fold-bottom {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, #5c0f23 0%, #440a18 65%, #300511 100%);
+    clip-path: polygon(0 100%, 100% 100%, 50% 48%);
+    -webkit-clip-path: polygon(0 100%, 100% 100%, 50% 48%);
+    filter: drop-shadow(0 -4px 10px rgba(0, 0, 0, 0.45));
+  }
+  .fold-bottom-rim {
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(0 100%, 100% 100%, 50% 48%);
+    -webkit-clip-path: polygon(0 100%, 100% 100%, 50% 48%);
+    border-top: 1.5px solid rgba(212, 175, 55, 0.7);
+    background: linear-gradient(0deg, rgba(212, 175, 55, 0.12) 0%, transparent 40%);
+  }
+  .fold-center-crease {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right, transparent 49%, rgba(0, 0, 0, 0.25) 50%, transparent 51%),
+      linear-gradient(to top, transparent 46%, rgba(0, 0, 0, 0.2) 48%, transparent 50%);
+    clip-path: polygon(0 100%, 100% 100%, 50% 48%);
+    -webkit-clip-path: polygon(0 100%, 100% 100%, 50% 48%);
+    pointer-events: none;
+  }
+
+  /* ═══ LAYER 5: WAX SEAL (z-index: 50) ═══ */
+  .layer-wax-seal {
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    transform: translate(-50%, -50%);
+    width: 52px;
+    height: 52px;
+    z-index: 50;
+    cursor: pointer;
+    will-change: transform, opacity;
+  }
+  .seal-disc {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 35% 30%, #e04452 0%, #b21e2d 42%, #780e1b 80%, #520912 100%);
+    box-shadow:
+      0 6px 16px rgba(0, 0, 0, 0.65),
+      0 1px 3px rgba(0, 0, 0, 0.4),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3),
+      inset 0 -2px 5px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 1px solid rgba(180, 20, 35, 0.5);
+  }
+  .seal-inner-ring {
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    border: 1.5px dashed rgba(246, 230, 180, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .seal-monogram {
+    font-family: 'Great Vibes', cursive;
+    font-size: 20px;
+    color: var(--gold-bright);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7), 0 0 6px rgba(212, 175, 55, 0.6);
+    user-select: none;
+    line-height: 1;
+    margin-top: -2px;
+  }
+
+  /* ═══ FLOATING AUDIO TOGGLE ═══ */
+  .audio-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    background: rgba(38, 5, 16, 0.75);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 8px 14px;
+    color: var(--gold-bright);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: all 0.25s ease;
+  }
+  .audio-toggle-btn:hover {
+    background: rgba(70, 11, 27, 0.9);
+    border-color: var(--gold-foil);
+    box-shadow: 0 0 18px rgba(212, 175, 55, 0.35);
+  }
+  .audio-icon-svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  /* ═══ BOTTOM ACTION BAR (Clean: Add to Calendar & Replay) ═══ */
+  .event-actions-bar {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(30px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    max-width: 92vw;
+  }
+  .event-actions-bar.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .action-btn {
+    background: linear-gradient(135deg, rgba(85, 14, 32, 0.9) 0%, rgba(50, 7, 19, 0.95) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--gold-bright);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 11px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    transition: all 0.25s ease;
+    white-space: nowrap;
+  }
+  .action-btn:hover {
+    background: linear-gradient(135deg, rgba(110, 18, 42, 0.95) 0%, rgba(75, 11, 28, 0.95) 100%);
+    border-color: var(--gold-foil);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.35);
+    transform: translateY(-2px);
+  }
+  .action-btn.primary {
+    background: linear-gradient(135deg, #a32238 0%, #781023 100%);
+    border-color: var(--gold-bright);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(163, 34, 56, 0.5);
+  }
+  .action-btn.primary:hover {
+    background: linear-gradient(135deg, #bd2842 0%, #8f132a 100%);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+  }
+  .action-icon {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  /* Toast Notification */
+  .toast-notice {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-30px);
+    background: rgba(30, 4, 12, 0.92);
+    border: 1px solid var(--gold-foil);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    color: var(--gold-bright);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 10px 22px;
+    border-radius: 30px;
+    z-index: 300;
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  .toast-notice.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- Scroll runway defines the scrub distance -->
+<div class="scroll-runway" id="runway"></div>
+
+<!-- 3D Viewport Scene -->
+<div class="viewport" id="viewport">
+  <div class="ambient-glow"></div>
+  <div class="sparkles-container" id="sparkles"></div>
+
+  <!-- Hero Header -->
+  <header class="hero-header" id="hero">
+    <div class="hero-pretitle">Please Join Us To Celebrate Our Bride-To-Be</div>
+    <h1 class="hero-title">Dr. Ayesha Fatima</h1>
+    <div class="hero-subtitle">Bridal Shower Invitation</div>
+  </header>
+
+  <!-- Floating Audio Mute / Unmute Button (Unmuted by default) -->
+  <button class="audio-toggle-btn" id="audioBtn" title="Toggle Sound">
+    <svg class="audio-icon-svg" id="audioIcon" viewBox="0 0 24 24">
+      <!-- Unmuted sound wave icon by default -->
+      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+    </svg>
+    <span id="audioText">Mute</span>
+  </button>
+
+  <!-- ════ STAGE ANCHOR ════
+       Each layer is a DIRECT SIBLING with clean physical z-indexes:
+       Flap (5/40) | Back (10) | Card (20/60) | Front Pocket (30) | Wax Seal (50)
+  -->
+  <div class="stage-anchor" id="anchor">
+
+    <!-- 1. SEPARATED 3D TOP FLAP (z-index: 40 when closed; drops to 5 behind back & card when open) -->
+    <div class="layer-flap" id="flapHinge">
+      <div class="flap-face flap-outside">
+        <div class="flap-outside-border"></div>
+      </div>
+      <div class="flap-face flap-inside"></div>
+    </div>
+
+    <!-- 2. ENVELOPE BACK WALL + SILK LINER (z-index: 10) -->
+    <div class="layer-env-back" id="envBack">
+      <div class="env-liner"></div>
+    </div>
+
+    <!-- 3. INVITATION CARD (VIDEO)
+         Inside pocket initially (z-index: 20) — in front of back (10), behind front pocket (30)!
+         Elevates to z-index: 60 once pulled out from the pocket.
+    -->
+    <div class="layer-card" id="cardWrap">
+      <!-- Unmuted by default -->
+      <video class="card-video-element" id="inviteVideo" preload="auto" loop playsinline webkit-playsinline>
+        <source src="invitation.mp4" type="video/mp4">
+      </video>
+      <div class="card-border-sheen"></div>
+    </div>
+
+    <!-- 4. ENVELOPE FRONT POCKET (z-index: 30)
+         Distinct front design with gold piping rim physically covering the bottom of the card!
+    -->
+    <div class="layer-env-front" id="envFront">
+      <div class="fold-left"></div>
+      <div class="fold-right"></div>
+      <div class="fold-bottom">
+        <div class="fold-bottom-rim"></div>
+      </div>
+      <div class="fold-center-crease"></div>
+    </div>
+
+    <!-- 5. WAX SEAL (z-index: 50, attached over flap tip) -->
+    <div class="layer-wax-seal" id="waxSeal" title="Tap to open invitation">
+      <div class="seal-disc">
+        <div class="seal-inner-ring">
+          <span class="seal-monogram">AF</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Scroll Hint & Fast Open Button -->
+  <div class="scroll-hint-bar" id="hintBar">
+    <button class="scroll-hint-btn" id="openBtn">
+      <span>Open Invitation</span>
+      <div class="scroll-arrow-anim"></div>
+    </button>
+  </div>
+
+  <!-- Event Suite Bar (Add to Calendar & Replay) -->
+  <div class="event-actions-bar" id="actionsBar">
+    <button class="action-btn primary" id="calBtn">
+      <svg class="action-icon" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5v-5z"/></svg>
+      <span>Add to Calendar</span>
+    </button>
+    <button class="action-btn" id="replayBtn" title="Replay envelope animation">
+      <svg class="action-icon" viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+      <span>Replay</span>
+    </button>
+  </div>
+
+</div>
+
+<!-- Toast Notification -->
+<div class="toast-notice" id="toastNotice">Event saved to Calendar! 📅</div>
+
+<script>
+(function() {
+  // DOM Elements
+  const $ = id => document.getElementById(id);
+  const hero = $('hero');
+  const hintBar = $('hintBar');
+  const openBtn = $('openBtn');
+  const flapHinge = $('flapHinge');
+  const waxSeal = $('waxSeal');
+  const envBack = $('envBack');
+  const envFront = $('envFront');
+  const cardWrap = $('cardWrap');
+  const vid = $('inviteVideo');
+  const sparkles = $('sparkles');
+  const audioBtn = $('audioBtn');
+  const audioIcon = $('audioIcon');
+  const audioText = $('audioText');
+  const actionsBar = $('actionsBar');
+  const calBtn = $('calBtn');
+  const replayBtn = $('replayBtn');
+  const toastNotice = $('toastNotice');
+
+  // Video is unmuted by default
+  vid.muted = false;
+  let isUnmuted = true;
+  let videoStarted = false;
+  let audioCtx = null;
+
+  // Sound effects generator via Web Audio API (paper rustle & wax break chime)
+  function playWaxBreakSound() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5 chime
+      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.5);
+    } catch(e) {}
+  }
+
+  // Generate luxury floating ambient sparkles
+  for (let i = 0; i < 18; i++) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.style.left = (4 + Math.random() * 92) + '%';
+    s.style.top = (45 + Math.random() * 55) + '%';
+    const sz = 2.5 + Math.random() * 4;
+    s.style.width = sz + 'px';
+    s.style.height = sz + 'px';
+    s.style.animationDuration = (8 + Math.random() * 8) + 's';
+    s.style.animationDelay = (Math.random() * 9) + 's';
+    sparkles.appendChild(s);
+  }
+
+  // Helper interpolation functions
+  function getProgress() {
+    const y = window.scrollY || window.pageYOffset || 0;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    return max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
+  }
+
+  function clamp(v, min, max) {
+    return Math.min(max, Math.max(min, v));
+  }
+
+  function remap(v, inMin, inMax, outMin, outMax) {
+    const t = clamp((v - inMin) / (inMax - inMin), 0, 1);
+    return outMin + (outMax - outMin) * t;
+  }
+
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  /* ═══════════════════════════════════════════
+     FRAME UPDATE: PHYSICAL 3D SCRUBBING
+     p: 0.00 -> 0.05 : Resting closed envelope with sealed stamp
+     p: 0.05 -> 0.28 : Wax seal breaks, Flap folds open 0° -> 180°
+     p: 0.28 -> 0.62 : Card rises smoothly out of pocket (-108%)
+     p: 0.62 -> 0.90 : Card elevates to z-index: 60, glides to center stage & scales up
+     p: 0.90 -> 1.00 : Centerpiece card active with action buttons
+     ═══════════════════════════════════════════ */
+  let sealCracked = false;
+
+  function render() {
+    const p = getProgress();
+
+    // 1. Hero text fade & slide up (0% to 12%)
+    const heroOpacity = remap(p, 0.01, 0.12, 1, 0);
+    const heroY = remap(p, 0.01, 0.12, 0, -25);
+    hero.style.opacity = heroOpacity;
+    hero.style.transform = `translateY(${heroY}px)`;
+
+    // 2. Hint bar fades out early (0% to 4%)
+    const hintOpacity = remap(p, 0, 0.04, 1, 0);
+    hintBar.style.opacity = hintOpacity;
+    hintBar.style.pointerEvents = hintOpacity <= 0.1 ? 'none' : 'auto';
+
+    // 3. Wax Seal behavior (0.04 to 0.14)
+    if (p > 0.06 && !sealCracked) {
+      sealCracked = true;
+      playWaxBreakSound();
+    } else if (p <= 0.04) {
+      sealCracked = false;
+    }
+
+    const sealOpacity = remap(p, 0.04, 0.14, 1, 0);
+    const sealScale = remap(p, 0.04, 0.14, 1, 0.4);
+    const sealY = remap(p, 0.04, 0.14, 0, 20);
+    waxSeal.style.opacity = sealOpacity;
+    waxSeal.style.transform = `translate(-50%, -50%) translateY(${sealY}px) scale(${sealScale})`;
+    waxSeal.style.pointerEvents = sealOpacity <= 0.1 ? 'none' : 'auto';
+
+    // 4. Flap 3D rotation (0.05 to 0.28)
+    // CRITICAL FLAP LAYERING:
+    // When closed (deg <= 90°): z-index: 40 (covers pocket and card)
+    // When opened (deg > 90°): drops to z-index: 5 (BEHIND envelope back (10) and BEHIND card (20))!
+    // The video NEVER comes from behind the open flap!
+    if (p < 0.05) {
+      flapHinge.style.transform = 'rotateX(0deg)';
+      flapHinge.style.zIndex = '40';
+    } else if (p <= 0.28) {
+      const flapT = easeOutCubic(remap(p, 0.05, 0.28, 0, 1));
+      const deg = flapT * 180;
+      flapHinge.style.transform = `rotateX(${deg}deg)`;
+      flapHinge.style.zIndex = deg > 90 ? '5' : '40';
+    } else {
+      flapHinge.style.transform = 'rotateX(180deg)';
+      flapHinge.style.zIndex = '5';
+    }
+
+    // 5. Card Rise & Pocket Layering (0.28 to 0.62)
+    // Inside pocket: card is at z-index: 20 (between back 10 and front pocket 30).
+    // As it slides up (-108%), it physically emerges out of the front pocket!
+    if (p < 0.28) {
+      cardWrap.style.transform = 'translateY(0%) scale(1)';
+      cardWrap.style.zIndex = '20';
+    } else if (p <= 0.62) {
+      const riseT = easeInOutCubic(remap(p, 0.28, 0.62, 0, 1));
+      const cardY = -riseT * 108; // % of card height
+      cardWrap.style.transform = `translateY(${cardY}%) scale(1)`;
+      cardWrap.style.zIndex = '20'; // still emerges from behind front pocket
+    } else {
+      // 6. Card Scaling & Center Stage (0.62 to 0.90)
+      // Card has cleared the envelope pocket! Elevates to z-index: 60 (in front of all envelope parts)
+      // and glides down to center view, scaling up gracefully
+      const stageT = easeInOutCubic(remap(p, 0.62, 0.90, 0, 1));
+      const startYPercent = -108;
+      const endYPercent = -8;
+      const currentY = startYPercent + (endYPercent - startYPercent) * stageT;
+      const currentScale = 1 + stageT * 0.16;
+
+      cardWrap.style.transform = `translateY(${currentY}%) scale(${currentScale})`;
+      cardWrap.style.zIndex = '60'; // in front of everything
+    }
+
+    // 7. Envelope presence:
+    // The envelope stays clearly visible and grounded behind the invitation card
+    if (p >= 0.62) {
+      const envT = easeInOutCubic(remap(p, 0.62, 0.90, 0, 1));
+      envBack.style.transform = `scale(${1 - envT * 0.08})`;
+      envFront.style.transform = `scale(${1 - envT * 0.08})`;
+      envBack.style.opacity = (1 - envT * 0.35).toString();
+      envFront.style.opacity = (1 - envT * 0.35).toString();
+    } else {
+      envBack.style.transform = 'scale(1)';
+      envFront.style.transform = 'scale(1)';
+      envBack.style.opacity = '1';
+      envFront.style.opacity = '1';
+    }
+
+    // 8. Video Playback & Actions Bar (0.75+)
+    if (p >= 0.75) {
+      if (!videoStarted) {
+        videoStarted = true;
+        playVideoWithAudio();
+      }
+      actionsBar.classList.add('active');
+    } else {
+      if (videoStarted) {
+        videoStarted = false;
+        vid.pause();
+      }
+      actionsBar.classList.remove('active');
+    }
+  }
+
+  // Play video with audio unmuted by default
+  function playVideoWithAudio() {
+    vid.muted = !isUnmuted;
+    const playPromise = vid.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        updateAudioButtonUI(isUnmuted);
+      }).catch(() => {
+        // If unmuted autoplay blocked prior to user interaction,
+        // play muted and unlock sound on the very next user tap/scroll
+        vid.muted = true;
+        vid.play();
+        updateAudioButtonUI(false);
+
+        const unlockOnUserGesture = () => {
+          if (isUnmuted) {
+            vid.muted = false;
+            vid.play();
+            updateAudioButtonUI(true);
+          }
+          ['click', 'touchstart', 'scroll', 'wheel'].forEach(evt => {
+            window.removeEventListener(evt, unlockOnUserGesture);
+          });
+        };
+        ['click', 'touchstart', 'scroll', 'wheel'].forEach(evt => {
+          window.addEventListener(evt, unlockOnUserGesture, { passive: true, once: true });
+        });
+      });
+    }
+  }
+
+  function updateAudioButtonUI(unmuted) {
+    if (unmuted) {
+      audioIcon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+      audioText.textContent = 'Mute';
+    } else {
+      audioIcon.innerHTML = '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>';
+      audioText.textContent = 'Unmute';
+    }
+  }
+
+  function toggleAudio() {
+    if (vid.muted) {
+      vid.muted = false;
+      isUnmuted = true;
+      vid.play();
+      updateAudioButtonUI(true);
+      showToast('Sound On 🎵');
+    } else {
+      vid.muted = true;
+      isUnmuted = false;
+      updateAudioButtonUI(false);
+      showToast('Sound Muted 🔇');
+    }
+  }
+
+  // Smooth auto-scroll function
+  function smoothScrollTo(targetProgress, duration = 1800) {
+    const startY = window.scrollY || window.pageYOffset || 0;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const targetY = targetProgress * max;
+    const diff = targetY - startY;
+    const startTime = performance.now();
+
+    function step(curTime) {
+      const elapsed = curTime - startTime;
+      const t = Math.min(1, elapsed / duration);
+      const ease = easeInOutCubic(t);
+      window.scrollTo(0, startY + diff * ease);
+      if (t < 1) {
+        requestAnimationFrame(step);
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  // Toast notification
+  let toastTimer = null;
+  function showToast(msg) {
+    toastNotice.textContent = msg;
+    toastNotice.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toastNotice.classList.remove('show');
+    }, 2800);
+  }
+
+  // Add to Calendar feature (.ics and Google Calendar)
+  function handleCalendarAdd() {
+    const title = 'Bridal Shower — Dr. Ayesha Fatima';
+    const location = "Bride's Residence";
+    const description = "Please join us to celebrate our bride-to-be, Dr. Ayesha Fatima!";
+    // Nov 29, 2026, 4:30 PM (16:30) to 7:30 PM (19:30)
+    const startDate = '20261129T163000';
+    const endDate = '20261129T193000';
+
+    // Generate .ics file for direct download
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Bridal Shower Invite//EN',
+      'BEGIN:VEVENT',
+      'SUMMARY:' + title,
+      'DESCRIPTION:' + description,
+      'LOCATION:' + location,
+      'DTSTART:20261129T163000',
+      'DTEND:20261129T193000',
+      'STATUS:CONFIRMED',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.setAttribute('download', 'Bridal_Shower_Ayesha_Fatima.ics');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    showToast('Event saved to Calendar! 📅');
+  }
+
+  // Interactions
+  audioBtn.addEventListener('click', toggleAudio);
+  cardWrap.addEventListener('click', () => {
+    if (getProgress() >= 0.75) {
+      toggleAudio();
+    }
+  });
+
+  // Wax seal & button tap triggers smooth opening
+  waxSeal.addEventListener('click', () => {
+    smoothScrollTo(0.95);
+  });
+  openBtn.addEventListener('click', () => {
+    smoothScrollTo(0.95);
+  });
+  replayBtn.addEventListener('click', () => {
+    smoothScrollTo(0);
+  });
+  calBtn.addEventListener('click', handleCalendarAdd);
+
+  // RAF scroll loop
+  let ticking = false;
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(() => {
+        render();
+        ticking = false;
+      });
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('touchmove', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+
+  // Initial draw & autoplay attempt
+  render();
+  playVideoWithAudio();
+})();
+</script>
+</body>
+</html>

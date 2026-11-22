@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "node server.js",
-    "build": "echo 'Build complete'",
+    "build": "node build.js",
     "lint": "echo 'No lint errors'",
     "start": "node server.js"
   },
