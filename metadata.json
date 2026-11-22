@@ -1,0 +1,7 @@
+{
+  "name": "You're Invited — Bridal Shower",
+  "description": "Interactive luxury bridal shower invitation with 3D envelope opening animation and video.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
